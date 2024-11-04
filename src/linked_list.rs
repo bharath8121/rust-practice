@@ -1,3 +1,4 @@
+use std::cell::RefCell;
 use std::io::Error;
 
 pub struct LinkedList {
@@ -27,6 +28,33 @@ impl LinkedList {
             println!("{}", curr_node.as_ref().unwrap().val);
             curr_node = &curr_node.as_ref().unwrap().next;
         }
+    }
+
+    pub fn delete_at_head(&mut self) -> Result<bool, String> {
+        if let Some(mut node) = self.head.take() {
+            self.head = node.next.take();
+            return Ok(true)
+        }
+        Err(String::from("no head found"))
+    }
+
+    pub fn delete_at(&mut self, index: i16) -> Result<bool, String> {
+        let mut curr_index = 0;
+        let mut curr_node = &self.head;
+        while curr_index < index-1 {
+            if let Some(mut node) = curr_node {
+                curr_node = &mut node.next;
+            } else {
+                return Err(String::from("out of bounds"));
+            }
+            curr_index += 1;
+        }
+
+        if let Some(mut node) = curr_node {
+            curr_node = &node.next.take();
+        }
+
+        Ok(true)
     }
 
     pub fn insert_at(&mut self, index: i16, val: i16) -> Result<bool, String> {

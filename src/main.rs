@@ -2,7 +2,11 @@ use std::fmt::Debug;
 use std::io;
 
 mod linked_list;
+mod task_project;
 
+use task_project::task_manager::TaskManager;
+use task_project::task::Task;
+use crate::task_project::task_manager::new_task_manager;
 
 fn insert_at_linked_list_head(mut ll: linked_list::LinkedList) -> linked_list::LinkedList {
 
@@ -36,7 +40,7 @@ fn insert_at_index(mut ll: linked_list::LinkedList) -> linked_list::LinkedList {
     ll
 }
 
-fn main() {
+fn start_linked_list_program() {
 
     let mut ll = linked_list::LinkedList::new();
 
@@ -63,4 +67,14 @@ fn main() {
 
     println!("\n\n printing items in the linked list:");
     ll.print();
+}
+
+fn main() {
+    let task_manager = new_task_manager();
+    let res = task_manager.add_task(String::from("test task"), chrono::Utc::now());
+    match res {
+        Ok(value) => println!("\ntask added successfully. {:?}", value),
+        Err(error) => println!("error occurred with task: {:?}", error)
+    }
+
 }
