@@ -1,31 +1,33 @@
 use chrono::{DateTime, Utc};
 use super::task::Task;
 
-struct StorageError {
+#[derive(Debug)]
+pub struct StorageError {
     error: String,
 }
 
 pub trait TaskStorage {
-    fn store_task(task: &Task) -> Result<bool, StorageError>;
-    fn delete_task(task: &Task) -> Result<bool, StorageError>;
-    fn get_task_for_date(date: &DateTime<Utc>) -> Result<Task, StorageError>;
+    fn store_task(&self, task: &Task) -> Result<bool, StorageError>;
+    fn delete_task(&self, task: &Task) -> Result<bool, StorageError>;
+    fn get_task_for_date(&self, date: DateTime<Utc>) -> Result<Vec<Task>, StorageError>;
 }
 
-struct JsonStorage {
+pub struct JsonStorage {
 }
 
 impl TaskStorage for JsonStorage {
-    fn store_task(task: &Task) -> Result<bool, StorageError> {
+    fn store_task(&self, task: &Task) -> Result<bool, StorageError> {
+        println!("received: {}", task.id);
         Ok(true)
     }
-    fn delete_task(task: &Task) -> Result<bool, StorageError> {
+    fn delete_task(&self, task: &Task) -> Result<bool, StorageError> {
         Ok(true)
     }
-    fn get_task_for_date(date: &DateTime<Utc>) -> Result<Task, StorageError> {
-        Ok(Task::new(String::from(""), String::from(""), true))
+    fn get_task_for_date(&self, date: DateTime<Utc>) -> Result<Vec<Task>, StorageError> {
+        todo!()
     }
 }
 
-pub fn new_task_storage() -> Box<JsonStorage> {
-    Box::new(JsonStorage {})
+pub fn new_json_task_storage() -> Box<dyn TaskStorage> {
+    Box::new(JsonStorage{})
 }
