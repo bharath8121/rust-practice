@@ -33,8 +33,20 @@ impl TaskManager for TaskManagerImpl {
         }
     }
 
+    // need to fix this
     fn finish_task(&self, id: String) -> Result<(), TaskManagerError> {
-        todo!()
+        let res = self.storage.get_task_for_id(id);
+        let mut task = match res {
+            Ok(task) => task,
+            Err(err) => return Err(TaskManagerError { message: String::from(format!("Failed to finish task: {:?}", err) ) }),
+        };
+
+        task.is_complete = true;
+        let res = self.storage.store_task(&task);
+        match res {
+            Ok(_) => Ok(()),
+            Err(err) => Err(TaskManagerError { message: String::from(format!("Failed to finish task: {:?}", err) ) }),
+        }
     }
 
     fn get_all_tasks(&self) -> Result<Vec<Task>, TaskManagerError> {

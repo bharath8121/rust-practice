@@ -10,6 +10,7 @@ pub trait TaskStorage {
     fn store_task(&self, task: &Task) -> Result<bool, StorageError>;
     fn delete_task(&self, task: &Task) -> Result<bool, StorageError>;
     fn get_task_for_date(&self, date: DateTime<Utc>) -> Result<Vec<Task>, StorageError>;
+    fn get_task_for_id(&self, id: String) -> Result<Task, StorageError>;
 }
 
 pub struct JsonStorage {
@@ -24,6 +25,10 @@ impl TaskStorage for JsonStorage {
         Ok(true)
     }
     fn get_task_for_date(&self, date: DateTime<Utc>) -> Result<Vec<Task>, StorageError> {
+        todo!()
+    }
+
+    fn get_task_for_id(&self, id: String) -> Result<Task, StorageError> {
         todo!()
     }
 }
