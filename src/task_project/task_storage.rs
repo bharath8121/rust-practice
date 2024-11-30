@@ -1,7 +1,7 @@
 use chrono::{DateTime, Utc};
 use serde::{Serialize, Deserialize};
-use std::fs::{File};
-use std::io::BufReader;
+use std::fs::{File, OpenOptions};
+use std::io::{BufReader, Error};
 use std::mem;
 use std::mem::{drop};
 use std::ops::Deref;
@@ -24,6 +24,32 @@ pub struct JsonStorage {
     file_path: String,
 }
 
+impl JsonStorage {
+
+    fn _load_tasks(&self, file: File) -> Result<Vec<Task>, StorageError> {
+        let reader = BufReader::new(file);
+        let stream: Result<Vec<Task>, serde_json::Error> = serde_json::from_reader(reader);
+        match stream {
+            Err(error) => {
+                Err(StorageError {error: "error getting tasks: ".to_string() + error.to_string().as_mut_str() })
+            },
+            Ok(stream) => Ok(stream),
+        }
+    }
+
+    fn load_tasks(&self) -> Result<Vec<Task>, StorageError> {
+        let res = File::open(&self.file_path);
+        match res {
+            Err(error) => {
+                Err(StorageError {error: "error opening file".to_string() + error.to_string().as_mut_str() })
+            },
+            Ok(file) => {
+                self._load_tasks(file)
+            }
+        }
+    }
+}
+
 impl TaskStorage for JsonStorage {
     fn create_task(&self, task: &Task) -> Result<bool, StorageError> {
         println!("received: {}", task.id);
@@ -42,27 +68,18 @@ impl TaskStorage for JsonStorage {
     }
 
     fn get_task_for_id(&self, id: String) -> Result<Task, StorageError> {
-        let res = File::open(&self.file_path);
+        let res = self.load_tasks();
         match res {
-            Ok(mut file) => {
-                let reader = BufReader::new(file);
-                let stream: Result<Vec<Task>, serde_json::Error> = serde_json::from_reader(reader);
-                match stream {
-                    Ok(tasks) => {
-                        for task in tasks.iter() {
-                            if task.id == id {
-                                return Ok(task.clone());
-                            }
-                        }
-                        Err(StorageError { error: "Task not found".to_string() })
-                    },
-                    Err(error) => {
-                        Err(StorageError {error: "error getting tasks: ".to_string() + error.to_string().as_mut_str() })
+            Err(error) => {
+                Err(StorageError {error: format!("{} {:?}", "error loading tasks".to_string(), error)})
+            },
+            Ok(tasks) => {
+                for task in tasks {
+                    if task.id == id {
+                        return Ok(task.clone());
                     }
                 }
-            }
-            Err(error) => {
-                Err(StorageError {error: "error opening file".to_string() + error.to_string().as_mut_str() })
+                Err(StorageError{error: format!("task with id {} not found", id) })
             }
         }
     }
@@ -70,7 +87,10 @@ impl TaskStorage for JsonStorage {
 
 pub fn new_json_task_storage(file_path: String) -> Box<dyn TaskStorage> {
 
-    let res = File::create(&file_path);
+    let res = OpenOptions::new()
+        .create(true)
+        .append(true).open(&file_path);
+
     match res {
         Ok(file) => {
             drop(file);
