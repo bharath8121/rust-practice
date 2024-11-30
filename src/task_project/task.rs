@@ -1,10 +1,10 @@
 use chrono::{DateTime, Utc};
+use serde::{Serialize, Deserialize};
 
-#[derive(Debug)]
+#[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Task {
     pub id: String,
     pub description: String,
-    pub date: DateTime<Utc>,
     pub is_complete: bool,
 }
 
@@ -13,7 +13,6 @@ impl Task {
         Task {
             id,
             description,
-            date,
             is_complete: false,
         }
     }
