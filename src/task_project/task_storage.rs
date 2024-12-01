@@ -1,10 +1,7 @@
 use chrono::{DateTime, Utc};
-use serde::{Serialize, Deserialize};
 use std::fs::{File, OpenOptions};
-use std::io::{BufReader, Error};
-use std::mem;
-use std::mem::{drop};
-use std::ops::Deref;
+use std::io::{BufReader, Write};
+use std::path::Path;
 use super::task::Task;
 
 #[derive(Debug)]
@@ -13,9 +10,9 @@ pub struct StorageError {
 }
 
 pub trait TaskStorage {
-    fn create_task(&self, task: &Task) -> Result<bool, StorageError>;
+    fn create_task(&self, task: &Task) -> Result<(), StorageError>;
     fn update_task(&self, task: &Task) -> Result<(), StorageError>;
-    fn delete_task(&self, id: String) -> Result<bool, StorageError>;
+    fn delete_task(&self, id: String) -> Result<(), StorageError>;
     fn get_task_for_date(&self, date: DateTime<Utc>) -> Result<Vec<Task>, StorageError>;
     fn get_task_for_id(&self, id: String) -> Result<Task, StorageError>;
 }
@@ -25,6 +22,21 @@ pub struct JsonStorage {
 }
 
 impl JsonStorage {
+
+    fn save_tasks(&self, tasks: Vec<Task>) -> Result<(), StorageError> {
+        // let res = OpenOptions::new().write(true).append(false).open(&self.file_path);
+        let res = File::create(&self.file_path);
+        match res {
+            Err(e) => Err(StorageError { error: e.to_string() }),
+            Ok(mut file) => {
+                let res = serde_json::to_writer_pretty(&mut file, &tasks);
+                match res {
+                    Err(e) => Err(StorageError { error: format!("failed to write data: {:?}", e) }),
+                    Ok(_) => Ok(()),
+                }
+            }
+        }
+    }
 
     fn _load_tasks(&self, file: File) -> Result<Vec<Task>, StorageError> {
         let reader = BufReader::new(file);
@@ -51,17 +63,53 @@ impl JsonStorage {
 }
 
 impl TaskStorage for JsonStorage {
-    fn create_task(&self, task: &Task) -> Result<bool, StorageError> {
-        println!("received: {}", task.id);
-        Ok(true)
+    fn create_task(&self, task: &Task) -> Result<(), StorageError> {
+        let res = self.load_tasks();
+        match res {
+            Err(error) => { Err(error) },
+            Ok(mut tasks) => {
+                tasks.push(task.clone());
+                self.save_tasks(tasks)
+            }
+        }
     }
 
     fn update_task(&self, task: &Task) -> Result<(), StorageError> {
-        todo!()
+        let res = self.load_tasks();
+        match res {
+            Err(error) => {
+                Err(StorageError {error: format!("{} {:?}", "error updating task: ".to_string(), error) })
+            },
+            Ok(mut tasks) => {
+                for t in tasks.iter_mut() {
+                    if task.id == t.id {
+                        t.description = task.description.to_string();
+                        t.is_complete = task.is_complete.clone();
+                    }
+                }
+                self.save_tasks(tasks)
+            }
+        }
     }
 
-    fn delete_task(&self, id: String) -> Result<bool, StorageError> {
-        Ok(true)
+    fn delete_task(&self, id: String) -> Result<(), StorageError> {
+        let res = self.load_tasks();
+        match res {
+            Err(error) => { Err(error) },
+            Ok(mut tasks) => {
+                let mut indx = 0;
+                for (i, t) in tasks.iter().enumerate() {
+                    if t.id == id {
+                        indx = i;
+                        break;
+                    }
+                }
+
+                tasks.remove(indx);
+                println!("final tasks {:?}", tasks);
+                self.save_tasks(tasks)
+            }
+        }
     }
     fn get_task_for_date(&self, date: DateTime<Utc>) -> Result<Vec<Task>, StorageError> {
         todo!()
@@ -93,6 +141,11 @@ pub fn new_json_task_storage(file_path: String) -> Box<dyn TaskStorage> {
 
     match res {
         Ok(file) => {
+            // let res = file.write("[]".as_bytes());
+            // match res {
+            //     Ok(_) => {}
+            //     Err(_) => {}
+            // }
             drop(file);
         },
         Err(e) => {

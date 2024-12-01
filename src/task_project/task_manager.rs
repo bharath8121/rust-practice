@@ -24,7 +24,7 @@ impl TaskManager for TaskManagerImpl {
 
     fn add_task(&self, description: String, date: DateTime<Utc>) -> Result<Task, TaskManagerError> {
         let id = uuid::Uuid::new_v4();
-        let task = Task::new(id.to_string(), description, date);
+        let task = Task::new(id.to_string(), description);
         let res = self.storage.create_task(&task);
         match res {
             Ok(_) => Ok(task),

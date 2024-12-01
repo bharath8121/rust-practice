@@ -9,7 +9,7 @@ pub struct Task {
 }
 
 impl Task {
-    pub fn new(id: String, description: String, date: DateTime<Utc>) -> Self {
+    pub fn new(id: String, description: String) -> Self {
         Task {
             id,
             description,
