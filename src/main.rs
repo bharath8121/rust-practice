@@ -3,9 +3,12 @@ use std::io;
 
 // mod linked_list;
 mod task_project;
+mod linked_list;
 
 use task_project::task_manager::TaskManager;
 use task_project::task_storage::TaskStorage;
+use crate::linked_list::LeetCode;
+use crate::linked_list::LinkedList;
 use crate::task_project::task_manager::new_task_manager;
 use crate::task_project::task_storage::{new_json_task_storage, JsonStorage};
 
@@ -71,11 +74,19 @@ use crate::task_project::task_storage::{new_json_task_storage, JsonStorage};
 // }
 
 fn main() {
-    let task_manager = new_task_manager();
-    let res = task_manager.add_task(String::from("test task"), chrono::Utc::now());
-    match res {
-        Ok(value) => println!("\ntask added successfully. {:?}", value.id),
-        Err(error) => println!("error occurred with task: {:?}", error)
-    }
+    // let task_manager = new_task_manager();
+    // let res = task_manager.add_task(String::from("test task"), chrono::Utc::now());
+    // match res {
+    //     Ok(value) => println!("\ntask added successfully. {:?}", value.id),
+    //     Err(error) => println!("error occurred with task: {:?}", error)
+    // }
+    let mut ll = LinkedList::new();
+    ll.insert_at_head(50);
+    ll.insert_at_head(109);
+    ll.insert_at_head(20);
+    ll.insert_at_head(10);
+    ll.insert_at_head(5);
+    ll.insert_at_head(50);
 
+    LeetCode::sort_list(ll.head);
 }
