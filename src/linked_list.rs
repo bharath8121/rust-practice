@@ -110,16 +110,18 @@ impl LeetCode {
             temp = &mut temp.as_mut().unwrap().next;
         }
 
-        while l.is_some() {
-            temp.as_mut().unwrap().next = Some(Box::new(LinkedListNode{val: l.as_ref().unwrap().val, next: None }));
-            l = &l.as_ref().unwrap().next;
-            temp = &mut temp.as_mut().unwrap().next;
+        if l.is_some() {
+            // temp.as_mut().unwrap().next = Some(Box::new(LinkedListNode { val: l.as_ref().unwrap().val, next: None }));
+            // l = &l.as_ref().unwrap().next;
+            // temp = &mut temp.as_mut().unwrap().next;
+            temp.as_mut().unwrap().next = l.clone();
         }
 
-        while r.is_some() {
-            temp.as_mut().unwrap().next = Some(Box::new(LinkedListNode{val: r.as_ref().unwrap().val, next: None }));
-            r = &r.as_ref().unwrap().next;
-            temp = &mut temp.as_mut().unwrap().next;
+        if r.is_some() {
+            // temp.as_mut().unwrap().next = Some(Box::new(LinkedListNode{val: r.as_ref().unwrap().val, next: None }));
+            // r = &r.as_ref().unwrap().next;
+            // temp = &mut temp.as_mut().unwrap().next;
+            temp.as_mut().unwrap().next = r.clone();
         }
 
         result.unwrap().next
@@ -158,7 +160,10 @@ impl LeetCode {
             temp = &temp.as_ref().unwrap().next;
         }
 
-        println!("*** length: {}", l);
+        if l == 0 {
+            return head;
+        }
+
         let h = Self::merge_sort(&head, 0, l-1);
         let mut temp = &h;
         while temp.is_some() {
