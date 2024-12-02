@@ -1,5 +1,6 @@
 use std::cell::RefCell;
 use std::io::Error;
+use std::rc::Rc;
 
 pub struct LinkedList {
     pub head: Option<Box<LinkedListNode>>,
@@ -86,8 +87,24 @@ impl LinkedList {
 
 }
 
-pub struct LeetCode {
+pub struct TreeNode {
+    pub val: i32,
+    pub left: Option<Rc<RefCell<TreeNode>>>,
+    pub right: Option<Rc<RefCell<TreeNode>>>,
+}
 
+impl TreeNode {
+    #[inline]
+    pub fn new(val: i32) -> Self {
+        TreeNode{
+            val,
+            left: None,
+            right: None,
+        }
+    }
+}
+
+pub struct LeetCode {
 }
 
 
@@ -171,6 +188,62 @@ impl LeetCode {
             temp = &temp.as_ref().unwrap().next;
         }
         h
+    }
+
+    fn is_palindrome(arr: &Vec<i32>) -> bool {
+        let mut i = 0;
+        let mut j = arr.len() - 1;
+        if arr.len() % 2 != 0 {
+            return false;
+        }
+
+        while i < j {
+            if arr[i] != arr[j] {
+                return false;
+            }
+            i+=1;
+            j-=1;
+        }
+
+        true
+    }
+
+    pub fn is_symmetric(head: Option<Rc<RefCell<TreeNode>>>) -> bool {
+        let mut queue: Vec<Option<Rc<RefCell<TreeNode>>>> = Vec::new();
+        queue.push(head);
+        while !queue.is_empty() {
+            let mut lot: Vec<Option<Rc<RefCell<TreeNode>>>> = Vec::new();
+            let mut r: Vec<i32> = Vec::new();
+
+            while !queue.is_empty() {
+                let node = queue.pop().unwrap();
+                if node.is_some() {
+                    let mut bn = node.as_ref().unwrap().borrow_mut();
+                    r.push(bn.val);
+                    if let Some(left) = bn.left.take() {
+                        lot.push(Some(left));
+                    } else {
+                        lot.push(None);
+                    }
+
+                    if let Some(right) = bn.right.take() {
+                        lot.push(Some(right));
+                    } else {
+                        lot.push(None);
+                    }
+                } else {
+                    r.push(-1000);
+                }
+            }
+
+            if !Self::is_palindrome(&r) {
+                return false;
+            }
+
+            // println!("{:?}", lot);
+            queue.clone_from(&lot);
+        }
+        true
     }
 
     pub fn create_new_list() {
