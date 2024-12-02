@@ -210,7 +210,7 @@ impl LeetCode {
 
     pub fn is_symmetric(head: Option<Rc<RefCell<TreeNode>>>) -> bool {
         let mut queue: Vec<Option<Rc<RefCell<TreeNode>>>> = Vec::new();
-        queue.push(head);
+        queue.push(head.clone());
         while !queue.is_empty() {
             let mut lot: Vec<Option<Rc<RefCell<TreeNode>>>> = Vec::new();
             let mut r: Vec<i32> = Vec::new();
