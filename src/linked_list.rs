@@ -1,4 +1,5 @@
 use std::cell::RefCell;
+use std::collections::HashMap;
 use std::io::Error;
 use std::rc::Rc;
 
@@ -244,6 +245,63 @@ impl LeetCode {
             queue.clone_from(&lot);
         }
         true
+    }
+
+
+    pub fn three_consecutive_odds(arr: Vec<i32>) -> bool {
+        let mut count = 0;
+        let mut iter = arr.iter();
+        
+        loop {
+            if count == 3 {
+                return true;
+            }
+            match iter.next() {
+                Some(x) => {
+                    if x%2 == 1 {
+                        count+=1;
+                    } else {
+                        count = 0;
+                    }
+                },
+                None => {
+                    break;
+                }
+            }
+            
+        }
+        false
+    }
+
+
+    // TODO: non-trie implementation
+    // TODO: change to rust way using map
+    pub fn replace_words(dictionary: Vec<String>, sentence: String) -> String {
+        let s = sentence.split(" ");
+        let mut st = HashMap::new();
+        let mut res: Vec<String> = Vec::new();
+        for i in dictionary.iter() {
+            st.insert(i.to_string(), true);
+        }
+
+        for item in s.into_iter() {
+            let mut i = 1;
+            let mut pushed = false;
+            while i <= item.len() {
+                let subitem = &item[0..i];
+                if st.contains_key(subitem) {
+                    res.push(subitem.to_string());
+                    pushed = true;
+                    break;
+                }
+                i += 1;
+            }
+            if !pushed {
+                res.push(item.to_string());
+            }
+        }
+
+        res.join(" ")
     }
 
     pub fn create_new_list() {
