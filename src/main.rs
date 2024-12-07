@@ -9,6 +9,8 @@ mod trie;
 
 use task_project::task_manager::TaskManager;
 use task_project::task_storage::TaskStorage;
+
+use crate::trie::Trie;
 use crate::linked_list::LeetCode;
 use crate::linked_list::LinkedList;
 use crate::task_project::task_manager::new_task_manager;
@@ -82,13 +84,23 @@ fn main() {
     //     Ok(value) => println!("\ntask added successfully. {:?}", value.id),
     //     Err(error) => println!("error occurred with task: {:?}", error)
     // }
-    let mut ll = LinkedList::new();
-    ll.insert_at_head(50);
-    ll.insert_at_head(109);
-    ll.insert_at_head(20);
-    ll.insert_at_head(10);
-    ll.insert_at_head(5);
-    ll.insert_at_head(50);
+    // let mut ll = LinkedList::new();
+    // ll.insert_at_head(50);
+    // ll.insert_at_head(109);
+    // ll.insert_at_head(20);
+    // ll.insert_at_head(10);
+    // ll.insert_at_head(5);
+    // ll.insert_at_head(50);
+    //
+    // LeetCode::sort_list(ll.head);
 
-    LeetCode::sort_list(ll.head);
+    let mut t = Trie::new();
+    t.insert(&"bharath".to_string());
+    if t.search(&"bharath".to_string()) {
+        println!("bharath is a found");
+    } else {
+        println!("bharath is not found");
+    }
+
+
 }

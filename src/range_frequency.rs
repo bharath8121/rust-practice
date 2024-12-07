@@ -1,4 +1,5 @@
 use std::collections::HashMap;
+use serde_json::to_string;
 
 struct SegmentTreeNode {
     left_index: i32,
@@ -42,35 +43,37 @@ impl SegmentTree {
     }
 
     fn build_tree(left_index: i32, right_index: i32, arr: &Vec<i32>) -> Option<Box<SegmentTreeNode>> {
-        let mut root = Some(Box::new(SegmentTreeNode::new(left_index, right_index, arr[left_index..right_index+1])));
-        if left_index == right_index {
-            return root;
-        }
-
-        let mid = (left_index + right_index) / 2;
-        root.as_mut().unwrap().left = Self::build_tree(left_index, mid, arr);
-        root.as_mut().unwrap().right = Self::build_tree(mid+1, right_index, arr);
-        root
+        // let mut root = Some(Box::new(SegmentTreeNode::new(left_index, right_index, arr[left_index..right_index+1])));
+        // if left_index == right_index {
+        //     return root;
+        // }
+        //
+        // let mid = (left_index + right_index) / 2;
+        // root.as_mut().unwrap().left = Self::build_tree(left_index, mid, arr);
+        // root.as_mut().unwrap().right = Self::build_tree(mid+1, right_index, arr);
+        // root
+        todo!()
     }
 
     fn traverse(&self) {
-        let mut q = Vec::new();
-        q.push(&self.root);
-
-        while q.len() != 0 {
-            let node = q.pop();
-            if node.is_some() {
-                println!("{:?}", node);
-                let left_node = node.unwrap().as_ref().unwrap().left;
-                if left_node.is_some() {
-                    q.push(&left_node);
-                }
-                let right_node = node.unwrap().as_ref().unwrap().right;
-                if right_node.is_some() {
-                    q.push(&right_node);
-                }
-            }
-        }
+        // let mut q = Vec::new();
+        // q.push(&self.root);
+        //
+        // while q.len() != 0 {
+        //     let node = q.pop();
+        //     if node.is_some() {
+        //         println!("{:?}", node);
+        //         let left_node = node.unwrap().as_ref().unwrap().left;
+        //         if left_node.is_some() {
+        //             q.push(&left_node);
+        //         }
+        //         let right_node = node.unwrap().as_ref().unwrap().right;
+        //         if right_node.is_some() {
+        //             q.push(&right_node);
+        //         }
+        //     }
+        // }
+        todo!()
     }
 
 }
