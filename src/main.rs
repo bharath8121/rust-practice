@@ -4,6 +4,8 @@ use std::io;
 // mod linked_list;
 mod task_project;
 mod linked_list;
+mod range_frequency;
+mod trie;
 
 use task_project::task_manager::TaskManager;
 use task_project::task_storage::TaskStorage;
