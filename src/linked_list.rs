@@ -304,6 +304,89 @@ impl LeetCode {
         res.join(" ")
     }
 
+    pub fn lies_between(left: usize, right: usize, target: i32, nums: &Vec<i32>) -> bool {
+        if nums[left] <= nums[right] && (nums[left] <= target && target <= nums[right]) {
+            println!("1. target: {} lies between {} and {}", target, nums[left], nums[right]);
+            return true;
+        }
+
+        if nums[left] >= nums[right] && (nums[left] >= target || target <= nums[right]) {
+            println!("2. target: {} lies between {} and {}", target, nums[left], nums[right]);
+            return true;
+        }
+
+        println!("3. target: {} doesn't lie between {} and {}", target, nums[left], nums[right]);
+        false
+    }
+
+    pub fn static_search(nums: &Vec<i32>, target: i32) -> i32 {
+        println!("in static");
+        if nums.len() == 2 {
+            if nums[0] == target {
+                return 0;
+            }
+
+            if nums[1] == target {
+                return 1;
+            }
+        }
+
+        if nums.len() == 3 {
+            if nums[0] == target {
+                return 0;
+            }
+
+            if nums[1] == target {
+                return 1;
+            }
+
+            if nums[2] == target {
+                return 2;
+            }
+
+        }
+
+        -1
+    }
+
+    // TODO: not working for few inputs. needs fix in logic
+    pub fn search(nums: Vec<i32>, target: i32) -> i32 {
+        let mut left = 0i32;
+        let mut right = (nums.len() - 1) as i32;
+        let mut mid = (left + right) / 2;
+
+        if right - left == 2 || right - left == 1 {
+            return Self::static_search(&nums, target);
+        }
+
+        while left != mid {
+            if nums[mid as usize] == target {
+                return mid;
+            }
+
+            if right - left == 2 || right - left == 1 {
+                return Self::static_search(&nums, target);
+            }
+
+            if Self::lies_between(left as usize, mid as usize, target.clone(), &nums) {
+                println!("lies between {} and {}", nums[left as usize], nums[mid as usize]);
+                right = mid;
+                mid = (left + mid) / 2;
+            } else {
+                println!("lies between {} and {}", nums[(mid+1) as usize], nums[right as usize]);
+                left = mid + 1;
+                mid = (mid+1 + right) / 2;
+            }
+            println!("new left: {} mid: {}, right: {}", nums[left as usize], nums[mid as usize], nums[right as usize]);
+        }
+
+        if nums[left as usize] == target {
+            return left;
+        }
+
+        -1
+    }
+
     pub fn create_new_list() {
         let mut ll = LinkedList::new();
         ll.insert_at_head(50);

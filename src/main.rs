@@ -94,13 +94,15 @@ fn main() {
     //
     // LeetCode::sort_list(ll.head);
 
-    let mut t = Trie::new();
-    t.insert(&"bharath".to_string());
-    if t.search(&"bharath".to_string()) {
-        println!("bharath is a found");
-    } else {
-        println!("bharath is not found");
-    }
+    // let mut t = Trie::new();
+    // t.insert(&"bharath".to_string());
+    // if t.search(&"bharath".to_string()) {
+    //     println!("bharath is a found");
+    // } else {
+    //     println!("bharath is not found");
+    // }
+
+    println!("{}", LeetCode::search(vec![1,3], 3))
 
 
 }
