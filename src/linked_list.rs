@@ -387,6 +387,34 @@ impl LeetCode {
         -1
     }
 
+    pub fn remove_duplicate_letters(s: String) -> String {
+        let mut counts: HashMap<char, i32> = HashMap::new();
+        for c in s.chars() {
+            counts.entry(c).and_modify(|e| *e += 1).or_insert(1);
+        }
+        todo!()
+    }
+
+    // pub fn license_key_formatting(s: String, k: i32) -> String {
+    //     let mut ptr: i32 = s.len() as i32 - 1i32;
+    //     let mut res = String::new();
+    //     while ptr >= k {
+    //         let mut i = 0;
+    //         while i < k {
+    //             let b = s.chars().nth(i as usize);
+    //             res.push_str(s.chars().nth(i));
+    //             i += 1;
+    //         }
+    //         res.push_str("-");
+    //         ptr = ptr - k;
+    //     }
+    //     if ptr >= 0 {
+    //
+    //     }
+    //     res.chars().rev().collect::<String>().to_uppercase()
+    // }
+
+
     pub fn create_new_list() {
         let mut ll = LinkedList::new();
         ll.insert_at_head(50);

@@ -1,21 +1,17 @@
 use std::fmt::Debug;
-use std::io;
-
 // mod linked_list;
 mod task_project;
 mod linked_list;
 mod range_frequency;
 mod trie;
+mod configuration;
+mod algorithms;
+mod schema;
 
 use task_project::task_manager::TaskManager;
 use task_project::task_storage::TaskStorage;
-
-use crate::trie::Trie;
+use crate::algorithms::sort_strings;
 use crate::linked_list::LeetCode;
-use crate::linked_list::LinkedList;
-use crate::task_project::task_manager::new_task_manager;
-use crate::task_project::task_storage::{new_json_task_storage, JsonStorage};
-
 // fn insert_at_linked_list_head(mut ll: linked_list::LinkedList) -> linked_list::LinkedList {
 //
 //     println!("enter the integer to be inserted into the linked list");
@@ -102,7 +98,8 @@ fn main() {
     //     println!("bharath is not found");
     // }
 
-    println!("{}", LeetCode::search(vec![1,3], 3))
+    // println!("{}", LeetCode::search(vec![1,3], 3))
 
+    println!("{:?}", sort_strings(vec!["bharath".to_string(), "aneesa".to_string()]))
 
 }

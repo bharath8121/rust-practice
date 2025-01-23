@@ -40,7 +40,7 @@ impl TaskManager for TaskManagerImpl {
             Err(err) => return Err(TaskManagerError { message: String::from(format!("Failed to finish task: {:?}", err) ) }),
         };
 
-        task.is_complete = true;
+        task.completed = true;
         let res = self.storage.update_task(&task);
         match res {
             Ok(_) => Ok(()),

@@ -1,11 +1,15 @@
 use chrono::{DateTime, Utc};
+use diesel::Queryable;
+use diesel::Insertable;
+use diesel::AsChangeset;
 use serde::{Serialize, Deserialize};
 
-#[derive(Clone, Debug, Serialize, Deserialize)]
+#[derive(Queryable, Insertable, AsChangeset, Clone, Debug, Serialize, Deserialize)]
+#[diesel(table_name = crate::schema::task)]
 pub struct Task {
     pub id: String,
     pub description: String,
-    pub is_complete: bool,
+    pub completed: bool,
 }
 
 impl Task {
@@ -13,7 +17,7 @@ impl Task {
         Task {
             id,
             description,
-            is_complete: false,
+            completed: false,
         }
     }
 }

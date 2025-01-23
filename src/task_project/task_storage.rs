@@ -6,7 +6,7 @@ use super::task::Task;
 
 #[derive(Debug)]
 pub struct StorageError {
-    error: String,
+    pub(crate) error: String,
 }
 
 pub trait TaskStorage {
@@ -84,7 +84,7 @@ impl TaskStorage for JsonStorage {
                 for t in tasks.iter_mut() {
                     if task.id == t.id {
                         t.description = task.description.to_string();
-                        t.is_complete = task.is_complete.clone();
+                        t.completed = task.completed.clone();
                     }
                 }
                 self.save_tasks(tasks)
