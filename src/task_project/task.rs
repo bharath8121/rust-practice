@@ -9,7 +9,7 @@ use serde::{Serialize, Deserialize};
 pub struct Task {
     pub id: String,
     pub description: String,
-    pub completed: bool,
+    pub completed: Option<bool>,
 }
 
 impl Task {
@@ -17,7 +17,7 @@ impl Task {
         Task {
             id,
             description,
-            completed: false,
+            completed: Some(false),
         }
     }
 }
