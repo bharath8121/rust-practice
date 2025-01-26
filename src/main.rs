@@ -8,6 +8,8 @@ mod configuration;
 mod algorithms;
 mod schema;
 
+mod entities;
+
 use task_project::task_manager::TaskManager;
 use task_project::task_storage::TaskStorage;
 use crate::algorithms::sort_strings;
