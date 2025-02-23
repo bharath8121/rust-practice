@@ -8,10 +8,13 @@ mod configuration;
 mod algorithms;
 mod schema;
 
+mod data_structures;
+
 mod entities;
 
 use task_project::task_manager::TaskManager;
 use task_project::task_storage::TaskStorage;
+use crate::data_structures::segment_tree::SumSegTree;
 use crate::algorithms::sort_strings;
 use crate::linked_list::LeetCode;
 // fn insert_at_linked_list_head(mut ll: linked_list::LinkedList) -> linked_list::LinkedList {
@@ -102,6 +105,12 @@ fn main() {
 
     // println!("{}", LeetCode::search(vec![1,3], 3))
 
-    println!("{:?}", sort_strings(vec!["bharath".to_string(), "aneesa".to_string()]))
+    // println!("{:?}", sort_strings(vec!["bharath".to_string(), "aneesa".to_string()]))
+
+
+    let mut tree = SumSegTree::new(vec![1, 3, 5]);
+    println!("{:#?}", tree.sum_range(0, 2));
+    tree.update(1, 2);
+    println!("{:#?}", tree.sum_range(0, 2));
 
 }
